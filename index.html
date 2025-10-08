@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BrightRank - AI Visibility Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              'brand-purple': '#8A2BE2', // A more vibrant purple
+              'brand-pink': '#FF69B4', // A complementary pink
+              'dark-bg': '#0A0A0A', // A deeper black for the background
+              'dark-card': '#1A1A1A', // A slightly lighter card background
+              'light-bg': '#F5F5F5', // A soft light background
+              'light-card': '#FFFFFF', // White cards for light mode
+              'border-color': 'rgba(255, 255, 255, 0.1)',
+            },
+            boxShadow: {
+              glass: '0 4px 30px rgba(0, 0, 0, 0.1)',
+            },
+            keyframes: {
+              'fade-in': {
+                '0%': { opacity: '0', transform: 'translateY(10px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
+              },
+              'toast-in': {
+                '0%': { transform: 'translateY(100%)', opacity: '0' },
+                '100%': { transform: 'translateY(0)', opacity: '1' },
+              },
+              'toast-out': {
+                '0%': { transform: 'translateY(0)', opacity: '1' },
+                '100%': { transform: 'translateY(100%)', opacity: '0' },
+              },
+              'slide-up': {
+                '0%': { transform: 'translateY(100%)', opacity: '0.5' },
+                '100%': { transform: 'translateY(0)', opacity: '1' },
+              },
+              'slide-down': {
+                '0%': { transform: 'translateY(0)', opacity: '1' },
+                '100%': { transform: 'translateY(100%)', opacity: '0' },
+              },
+              'progress-bar': {
+                '0%': { width: '0%' },
+                '100%': { width: '100%' },
+              },
+              'spin-slow': {
+                from: { transform: 'rotate(0deg)' },
+                to: { transform: 'rotate(360deg)' },
+              },
+              'indeterminate-progress': {
+                '0%': { transform: 'translateX(-50%) scaleX(0.2)' },
+                '50%': { transform: 'translateX(100%) scaleX(0.8)' },
+                '100%': { transform: 'translateX(250%) scaleX(0.2)' },
+              },
+              'radar-pulse': {
+                '0%': { transform: 'scale(0.6)', opacity: '0.6' },
+                '100%': { transform: 'scale(2.2)', opacity: '0' },
+              },
+              'text-gradient-shift': {
+                '0%, 100%': { backgroundPosition: '0% 50%' },
+                '50%': { backgroundPosition: '100% 50%' },
+              },
+              'subtle-pulse': {
+                '0%, 100%': { transform: 'scale(1)' },
+                '50%': { transform: 'scale(1.08)' },
+              },
+            },
+            animation: {
+              'fade-in': 'fade-in 0.5s ease-out forwards',
+              'toast-in': 'toast-in 0.5s ease-out forwards',
+              'toast-out': 'toast-out 0.5s ease-in forwards',
+              'slide-up':
+                'slide-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+              'slide-down':
+                'slide-down 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+              'progress-bar': 'progress-bar 1.5s ease-in-out forwards',
+              'spin-slow': 'spin-slow 3s linear infinite',
+              'indeterminate-progress':
+                'indeterminate-progress 2s ease-in-out infinite',
+              'radar-pulse':
+                'radar-pulse 2s cubic-bezier(0.4, 0, 0.2, 1) infinite',
+              'text-gradient-shift': 'text-gradient-shift 4s ease infinite',
+              'subtle-pulse': 'subtle-pulse 2s ease-in-out infinite',
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      /* Tour Glassmorphic Styles */
+      .__floater__body {
+        backdrop-filter: blur(12px) !important;
+        -webkit-backdrop-filter: blur(12px) !important;
+      }
+
+      .dark .__floater__body {
+        background: rgba(26, 26, 26, 0.95) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      }
+
+      .__floater__body {
+        background: rgba(255, 255, 255, 0.95) !important;
+        border: 1px solid rgba(0, 0, 0, 0.1) !important;
+      }
+
+      /* Improve spotlight visibility */
+      .react-joyride__spotlight {
+        background-color: transparent !important;
+      }
+
+      .react-joyride__overlay {
+        background-color: rgba(0, 0, 0, 0.4) !important;
+      }
+
+      .dark .react-joyride__overlay {
+        background-color: rgba(0, 0, 0, 0.6) !important;
+      }
+
+      /* Make highlighted elements stand out */
+      [data-tour]:not([data-tour=""]) {
+        position: relative;
+        z-index: 10001 !important;
+      }
+
+      /* Ensure sidebar stays fixed and below tour */
+      aside[data-tour="sidebar"] {
+        position: fixed !important;
+        z-index: 1000 !important;
+      }
+
+      /* Ensure all other tour targets appear above the overlay but below tour */
+      [data-tour]:not([data-tour=""]):not(aside) {
+        position: relative !important;
+        z-index: 99996 !important;
+      }
+
+      /* Prevent sidebar from interfering with tour */
+      .tour-active aside {
+        z-index: 1000 !important;
+      }
+
+      @page {
+        size: A4;
+        margin: 1.5cm;
+      }
+
+      @media print {
+        body,
+        html {
+          background-color: #fff !important;
+          color: #000 !important;
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+        }
+
+        /* Hide everything by default */
+        body * {
+          visibility: hidden;
+        }
+
+        /* Show only the print area and its children */
+        #print-area,
+        #print-area * {
+          visibility: visible;
+        }
+
+        #print-area {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 100%;
+          margin: 0;
+          padding: 0;
+          border: none !important;
+          box-shadow: none !important;
+          counter-reset: page;
+        }
+
+        /* General print styles */
+        .print-only {
+          display: block !important;
+        }
+        .no-print {
+          display: none !important;
+        }
+        .page-break-before {
+          page-break-before: always;
+        }
+        .page-break-after {
+          page-break-after: always;
+        }
+        .page-break-inside-avoid {
+          page-break-inside: avoid;
+        }
+
+        /* PDF Cover Page */
+        .pdf-cover {
+          display: flex !important;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          height: 257mm; /* A4 height minus margins */
+          text-align: center;
+          page-break-after: always;
+          background: linear-gradient(135deg, #8a2be2, #ff69b4) !important;
+          color: white !important;
+        }
+        .pdf-cover * {
+          color: white !important;
+          visibility: visible;
+        }
+        .pdf-cover .logo-svg rect {
+          fill: url(#logoGradientPrint) !important;
+        }
+        .pdf-cover .logo-svg path {
+          stroke: white !important;
+        }
+        .pdf-cover h1 {
+          font-size: 2.5rem !important;
+          font-weight: bold !important;
+          margin-bottom: 0.5rem !important;
+        }
+        .pdf-cover h2 {
+          font-size: 1.5rem !important;
+          font-weight: normal !important;
+          opacity: 0.9 !important;
+        }
+        .pdf-cover .meta-info {
+          margin-top: 4rem !important;
+          font-size: 1rem !important;
+          opacity: 0.8 !important;
+        }
+
+        /* PDF Header & Footer */
+        .pdf-header,
+        .pdf-footer {
+          display: block !important;
+          position: fixed;
+          width: 100%;
+          font-size: 9pt;
+          color: #666 !important;
+        }
+        .pdf-header {
+          top: -1.2cm;
+          left: 0;
+          text-align: center;
+          border-bottom: 1px solid #ccc;
+          padding-bottom: 5px;
+        }
+        .pdf-footer {
+          bottom: -1.2cm;
+          left: 0;
+          border-top: 1px solid #ccc;
+          padding-top: 5px;
+        }
+        .pdf-footer .page-number::after {
+          content: counter(page);
+        }
+        .pdf-footer table {
+          width: 100%;
+        }
+
+        /* Force dark mode styles to be light for printing */
+        .dark #print-area,
+        .dark #print-area *,
+        .dark .recharts-text,
+        .dark .recharts-legend-item-text {
+          color: #000 !important;
+          background-color: #fff !important;
+          fill: #000 !important;
+          stroke: #666 !important;
+          border-color: #e2e8f0 !important;
+        }
+        .dark #print-area .recharts-cartesian-axis-tick-value tspan,
+        .dark #print-area .recharts-label tspan {
+          fill: #000 !important;
+        }
+
+        /* Chart adjustments for print */
+        .recharts-wrapper,
+        .recharts-surface {
+          page-break-inside: avoid;
+        }
+        #print-area .recharts-responsive-container {
+          width: 100% !important;
+          height: 300px !important; /* Fixed height for consistency */
+        }
+        #print-area .card-for-print {
+          border: 1px solid #e2e8f0 !important;
+          box-shadow: none !important;
+          page-break-inside: avoid;
+          background: white !important;
+        }
+
+        /* Table styles for print */
+        #print-area table {
+          width: 100%;
+          border-collapse: collapse;
+        }
+        #print-area th,
+        #print-area td {
+          border: 1px solid #ddd;
+          padding: 8px;
+          text-align: left;
+        }
+        #print-area th {
+          background-color: #f2f2f2 !important;
+          font-weight: bold;
+        }
+      }
+    </style>
+    <script type="importmap">
+      {
+        "imports": {
+          "vite": "https://aistudiocdn.com/vite@^7.1.9",
+          "@vitejs/plugin-react": "https://aistudiocdn.com/@vitejs/plugin-react@^5.0.4",
+          "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+          "recharts": "https://aistudiocdn.com/recharts@^3.2.1",
+          "react": "https://aistudiocdn.com/react@^19.2.0",
+          "react/": "https://aistudiocdn.com/react@^19.2.0/"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
