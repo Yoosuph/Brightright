@@ -279,7 +279,7 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ onNavigate }) => {
 
       {/* Dropdown Panel */}
       {isOpen && (
-        <div className="fixed sm:absolute left-0 sm:left-auto right-0 mt-2 w-full sm:w-96 max-h-[calc(100vh-4rem)] sm:max-h-[600px] bg-white dark:bg-gray-800 sm:rounded-2xl shadow-2xl border-t sm:border border-gray-200 dark:border-gray-700 overflow-hidden z-50 animate-fade-in">
+        <div className="fixed sm:absolute top-16 sm:top-auto left-4 right-4 sm:left-auto sm:right-0 sm:mt-2 sm:w-96 max-h-[50vh] sm:max-h-[600px] bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden z-50 animate-fade-in">
           {/* Header */}
           <div className="p-4 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-brand-purple/10 to-brand-pink/10">
             <div className="flex items-center justify-between mb-3">
@@ -335,7 +335,7 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ onNavigate }) => {
           </div>
 
           {/* Notifications List */}
-          <div className="overflow-y-auto max-h-[400px] p-2">
+          <div className="overflow-y-auto max-h-[30vh] sm:max-h-[400px] p-2">
             {displayedNotifications.length > 0 ? (
               <div className="space-y-2">
                 {displayedNotifications.map((notification) => (

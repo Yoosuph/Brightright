@@ -351,6 +351,7 @@ const App: React.FC = () => {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showWaitlistModal, setShowWaitlistModal] = useState(false);
   const [isInitialAnalysis, setIsInitialAnalysis] = useState(false);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
   const [runTour, setRunTour] = useState(false);
   const timeoutId = useRef<number | null>(null);
@@ -615,12 +616,15 @@ const App: React.FC = () => {
           isDarkMode={isDarkMode}
           setIsDarkMode={setIsDarkMode}
           onGoHome={handleLogoClickLogout}
+          isOpen={isMobileSidebarOpen}
+          onClose={() => setIsMobileSidebarOpen(false)}
         />
         <div className="flex-1 flex flex-col overflow-hidden">
           <TopBar
             currentPage={currentPage}
             setCurrentPage={setCurrentPage}
             onRestartTour={handleRestartTour}
+            onMenuClick={() => setIsMobileSidebarOpen(true)}
           />
           <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto">
             <div className="max-w-7xl mx-auto">

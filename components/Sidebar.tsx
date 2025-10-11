@@ -8,6 +8,8 @@ interface SidebarProps {
   isDarkMode: boolean;
   setIsDarkMode: (isDark: boolean) => void;
   onGoHome: () => void;
+  isOpen?: boolean;
+  onClose?: () => void;
 }
 
 const NavItem: React.FC<{
@@ -46,11 +48,179 @@ const Sidebar: React.FC<SidebarProps> = ({
   isDarkMode,
   setIsDarkMode,
   onGoHome,
+  isOpen = false,
+  onClose,
 }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
     <>
+      {/* Mobile Drawer Overlay */}
+      {isOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-40 md:hidden"
+          onClick={onClose}
+        />
+      )}
+      
+      {/* Mobile Drawer */}
+      <div
+        className={`fixed top-0 left-0 h-full w-72 bg-light-card dark:bg-dark-card backdrop-blur-xl shadow-glass border-r border-white/10 z-50 md:hidden transition-transform duration-300 ${
+          isOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
+      >
+        <div className="flex flex-col h-full p-4">
+          <div className="flex items-center justify-between mb-8">
+            <div
+              onClick={() => {
+                onGoHome();
+                onClose?.();
+              }}
+              className="flex items-center cursor-pointer"
+            >
+              <Logo className="w-10 h-10 flex-shrink-0" />
+              <h1 className="text-xl font-bold text-gray-900 dark:text-white ml-3 whitespace-nowrap">
+                BrightRank
+              </h1>
+            </div>
+            <button
+              onClick={onClose}
+              className="p-2 rounded-lg hover:bg-gray-500/10 text-gray-500 dark:text-gray-400"
+              aria-label="Close menu"
+            >
+              <IconClose />
+            </button>
+          </div>
+
+          <nav className="flex-grow overflow-y-auto">
+            <ul>
+              <MobileNavItem
+                page="dashboard"
+                currentPage={currentPage}
+                setCurrentPage={(page) => {
+                  setCurrentPage(page);
+                  onClose?.();
+                }}
+                icon={<IconDashboard />}
+                label="Dashboard"
+              />
+              <MobileNavItem
+                page="multiplatform"
+                currentPage={currentPage}
+                setCurrentPage={(page) => {
+                  setCurrentPage(page);
+                  onClose?.();
+                }}
+                icon={<IconLayers />}
+                label="AI Platforms"
+              />
+              <MobileNavItem
+                page="analytics"
+                currentPage={currentPage}
+                setCurrentPage={(page) => {
+                  setCurrentPage(page);
+                  onClose?.();
+                }}
+                icon={<IconChart />}
+                label="Analytics"
+              />
+              <MobileNavItem
+                page="keywords"
+                currentPage={currentPage}
+                setCurrentPage={(page) => {
+                  setCurrentPage(page);
+                  onClose?.();
+                }}
+                icon={<IconTag />}
+                label="Keywords"
+              />
+              <MobileNavItem
+                page="competitors"
+                currentPage={currentPage}
+                setCurrentPage={(page) => {
+                  setCurrentPage(page);
+                  onClose?.();
+                }}
+                icon={<IconUsers />}
+                label="Competitors"
+              />
+              <MobileNavItem
+                page="intelligence"
+                currentPage={currentPage}
+                setCurrentPage={(page) => {
+                  setCurrentPage(page);
+                  onClose?.();
+                }}
+                icon={<IconShield />}
+                label="Intelligence"
+              />
+              <MobileNavItem
+                page="alerts"
+                currentPage={currentPage}
+                setCurrentPage={(page) => {
+                  setCurrentPage(page);
+                  onClose?.();
+                }}
+                icon={<IconBell />}
+                label="Alerts"
+              />
+              <MobileNavItem
+                page="reports"
+                currentPage={currentPage}
+                setCurrentPage={(page) => {
+                  setCurrentPage(page);
+                  onClose?.();
+                }}
+                icon={<IconDocument />}
+                label="Reports"
+              />
+              <MobileNavItem
+                page="settings"
+                currentPage={currentPage}
+                setCurrentPage={(page) => {
+                  setCurrentPage(page);
+                  onClose?.();
+                }}
+                icon={<IconSettings />}
+                label="Settings"
+              />
+            </ul>
+          </nav>
+
+          {/* Mobile Drawer Footer */}
+          <div className="space-y-4 border-t border-gray-200 dark:border-gray-700 pt-4">
+            <div className="p-2 rounded-lg bg-gray-500/5">
+              <div className="flex items-center">
+                <div className="w-10 h-10 rounded-full bg-gray-500/20 flex items-center justify-center text-gray-400">
+                  <IconUser />
+                </div>
+                <div className="ml-3">
+                  <p className="font-semibold text-sm">Demo User</p>
+                  <p className="text-xs text-gray-400">user@example.com</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-1 p-1 rounded-lg bg-gray-500/10">
+              <button
+                onClick={() => setIsDarkMode(false)}
+                className={`flex items-center justify-center p-2 rounded-md transition-colors text-gray-500 ${!isDarkMode ? 'bg-white dark:bg-dark-bg shadow' : ''}`}
+                aria-label="Switch to light mode"
+              >
+                <IconSun />
+              </button>
+              <button
+                onClick={() => setIsDarkMode(true)}
+                className={`flex items-center justify-center p-2 rounded-md transition-colors text-gray-400 ${isDarkMode ? 'bg-white dark:bg-dark-bg shadow' : ''}`}
+                aria-label="Switch to dark mode"
+              >
+                <IconMoon />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Desktop Sidebar */}
       <div
         className={`relative ${isCollapsed ? 'w-24' : 'w-64'} transition-all duration-300 hidden md:block`}
@@ -250,16 +420,52 @@ const MobileNavItem: React.FC<{
   currentPage: Page;
   setCurrentPage: (page: Page) => void;
   icon: React.ReactNode;
-}> = ({ page, currentPage, setCurrentPage, icon }) => (
-  <button
-    onClick={() => setCurrentPage(page)}
-    className={`p-3 rounded-lg transition-colors duration-200 ${currentPage === page ? 'text-brand-purple' : 'text-gray-500'}`}
-    aria-label={`Go to ${page} page`}
-  >
-    {icon}
-  </button>
+  label?: string;
+}> = ({ page, currentPage, setCurrentPage, icon, label }) => (
+  label ? (
+    <li>
+      <button
+        onClick={() => setCurrentPage(page)}
+        className={`w-full flex items-center p-3 my-1 rounded-lg cursor-pointer transition-all duration-300 ${
+          currentPage === page
+            ? 'bg-brand-purple/10 text-brand-purple dark:text-white dark:bg-brand-purple/20'
+            : 'hover:bg-gray-500/10 text-gray-500 dark:text-gray-400 hover:text-brand-purple dark:hover:text-white'
+        }`}
+        aria-current={currentPage === page ? 'page' : undefined}
+      >
+        {icon}
+        <span className={`ml-4 font-medium ${currentPage === page ? 'font-semibold' : ''}`}>
+          {label}
+        </span>
+      </button>
+    </li>
+  ) : (
+    <button
+      onClick={() => setCurrentPage(page)}
+      className={`p-3 rounded-lg transition-colors duration-200 ${currentPage === page ? 'text-brand-purple' : 'text-gray-500'}`}
+      aria-label={`Go to ${page} page`}
+    >
+      {icon}
+    </button>
+  )
 );
 
+const IconClose = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="h-6 w-6"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M6 18L18 6M6 6l12 12"
+    />
+  </svg>
+);
 const IconHome = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"

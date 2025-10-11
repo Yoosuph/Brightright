@@ -302,7 +302,7 @@ const FloatingChatBot: React.FC<FloatingChatBotProps> = ({
       {/* Chat Toggle Button */}
       <button
         onClick={toggleChat}
-        className={`fixed bottom-6 right-6 z-50 p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-105 ${
+        className={`fixed bottom-20 right-6 z-50 p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-105 ${
           isOpen && !isMinimized
             ? 'bg-gray-600 text-white scale-95' 
             : 'bg-gradient-to-r from-brand-purple to-brand-pink text-white hover:shadow-xl'
@@ -319,7 +319,7 @@ const FloatingChatBot: React.FC<FloatingChatBotProps> = ({
 
       {/* Chat Window */}
       {isOpen && (
-        <div className={`fixed bottom-24 right-6 z-40 w-96 max-w-[90vw] transition-all duration-300 ${
+        <div className={`fixed bottom-36 right-6 z-40 w-96 max-w-[90vw] transition-all duration-300 ${
           isMinimized ? 'h-14' : 'h-[600px] max-h-[80vh]'
         }`}>
           <Card className="h-full flex flex-col shadow-2xl border border-gray-200 dark:border-gray-700">

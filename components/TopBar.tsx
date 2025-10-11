@@ -17,7 +17,25 @@ interface TopBarProps {
   lastUpdated?: Date;
   showDataRefresh?: boolean;
   onRestartTour?: () => void;
+  onMenuClick?: () => void;
 }
+
+const IconMenu: React.FC<{ className?: string }> = ({ className }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M4 6h16M4 12h16M4 18h16"
+    />
+  </svg>
+);
 
 const IconRefresh: React.FC<{ className?: string }> = ({ className }) => (
   <svg
@@ -113,6 +131,7 @@ const TopBar: React.FC<TopBarProps> = ({
   lastUpdated,
   showDataRefresh = false,
   onRestartTour,
+  onMenuClick,
 }) => {
   const pageInfo = getPageTitles(currentPage);
   const displayTitle = title || pageInfo.title;
@@ -140,17 +159,26 @@ const TopBar: React.FC<TopBarProps> = ({
 
         {/* Page Header */}
         <div className="flex items-center justify-between">
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center">
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white truncate">
+          <div className="flex items-center flex-1 min-w-0">
+            {/* Mobile Menu Button */}
+            <button
+              onClick={onMenuClick}
+              className="p-2 mr-3 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg md:hidden"
+              aria-label="Open menu"
+            >
+              <IconMenu className="h-6 w-6" />
+            </button>
+            
+            <div className="flex-1 min-w-0">
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white truncate">
                 {displayTitle}
               </h1>
+              {displaySubtitle && (
+                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400 max-w-2xl">
+                  {displaySubtitle}
+                </p>
+              )}
             </div>
-            {displaySubtitle && (
-              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400 max-w-2xl">
-                {displaySubtitle}
-              </p>
-            )}
           </div>
 
           {/* Quick Actions */}
