@@ -4,13 +4,15 @@ import TopBar from './components/TopBar';
 import PageTransition from './components/PageTransition';
 import DashboardPage from './pages/DashboardPage';
 import AdvancedAnalyticsPage from './pages/AdvancedAnalyticsPage';
-import ReportsPage from './pages/ReportsPage';
-import SettingsPage from './pages/SettingsPage';
+import ModernReportsPage from './pages/ModernReportsPage';
+import ModernSettingsPage from './pages/ModernSettingsPage';
 import LandingPage from './pages/LandingPage';
-import KeywordsPage from './pages/KeywordsPage';
+import ModernKeywordsPage from './pages/ModernKeywordsPage';
 import CompetitorsPage from './pages/CompetitorsPage';
+import CompetitiveIntelligencePage from './pages/CompetitiveIntelligencePage';
 import AlertsPage from './pages/AlertsPage';
 import ModernOnboardingModal from './components/ModernOnboardingModal';
+import MultiPlatformDashboard from './pages/MultiPlatformDashboard';
 
 import DashboardTour, { TOUR_STORAGE_KEY } from './components/onboarding/DashboardTour';
 import { Toast, ToastData } from './components/Toast';
@@ -518,9 +520,11 @@ const App: React.FC = () => {
       'analytics',
       'keywords',
       'competitors',
+      'intelligence',
       'alerts',
       'reports',
       'settings',
+      'multiplatform',
     ];
     if (authenticatedPages.includes(currentPage) && !appData) {
       return (
@@ -548,11 +552,13 @@ const App: React.FC = () => {
             showToast={showToast}
           />
         );
+      case 'multiplatform':
+        return <MultiPlatformDashboard />;
       case 'analytics':
         return <AdvancedAnalyticsPage appData={appData!} />;
       case 'keywords':
         return (
-          <KeywordsPage
+          <ModernKeywordsPage
             brandName={appData!.brandName}
             initialKeywords={appData!.keywords
               .split(',')
@@ -562,13 +568,15 @@ const App: React.FC = () => {
         );
       case 'competitors':
         return <CompetitorsPage appData={appData!} />;
+      case 'intelligence':
+        return <CompetitiveIntelligencePage appData={appData!} />;
       case 'alerts':
         return <AlertsPage appData={appData!} />;
       case 'reports':
-        return <ReportsPage appData={appData!} />;
+        return <ModernReportsPage appData={appData!} />;
       case 'settings':
         return (
-          <SettingsPage
+          <ModernSettingsPage
             showToast={showToast}
             appData={appData!}
             setAppData={handleSetAppData}
@@ -593,7 +601,7 @@ const App: React.FC = () => {
   };
 
   const isAuthenticated = !!appData;
-  const isAppPage = ['dashboard', 'analytics', 'keywords', 'competitors', 'alerts', 'reports', 'settings'].includes(
+  const isAppPage = ['dashboard', 'multiplatform', 'analytics', 'keywords', 'competitors', 'intelligence', 'alerts', 'reports', 'settings'].includes(
     currentPage
   );
   const isAppLayout = isAuthenticated && isAppPage;

@@ -11,6 +11,7 @@ interface ModernOnboardingData extends OnboardingData {
   industry?: string;
   targetCountries?: string[];
   aiPlatforms?: string[];
+  trackingGoals?: string[];
   suggestedCompetitors?: SuggestedCompetitor[];
 }
 
@@ -250,15 +251,31 @@ const ModernOnboardingModal: React.FC<ModernOnboardingModalProps> = ({
     <div className="mb-4">
       <div className="flex justify-between items-center mb-2">
         <h1 className="text-lg font-bold bg-gradient-to-r from-brand-purple to-brand-pink bg-clip-text text-transparent">
-          Setup BrightRight
+          Setup BrightRank
         </h1>
-        <span className="text-xs text-gray-500 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded-full">
-          {step}/{totalSteps}
-        </span>
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-gray-500 dark:text-gray-400">
+            {step}/{totalSteps}
+          </span>
+          <div className="flex gap-1">
+            {Array.from({ length: totalSteps }, (_, i) => (
+              <div
+                key={i}
+                className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+                  i < step 
+                    ? 'bg-gradient-to-r from-brand-purple to-brand-pink' 
+                    : i === step - 1
+                    ? 'bg-gradient-to-r from-brand-purple to-brand-pink animate-pulse'
+                    : 'bg-gray-200 dark:bg-gray-700'
+                }`}
+              />
+            ))}
+          </div>
+        </div>
       </div>
-      <div className="w-full bg-gray-100 dark:bg-gray-800 rounded-full h-1">
+      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5 overflow-hidden">
         <div 
-          className="bg-gradient-to-r from-brand-purple to-brand-pink h-1 rounded-full transition-all duration-500"
+          className="bg-gradient-to-r from-brand-purple via-purple-500 to-brand-pink h-1.5 rounded-full transition-all duration-700 ease-out"
           style={{ width: `${(step / totalSteps) * 100}%` }}
         />
       </div>
@@ -270,12 +287,12 @@ const ModernOnboardingModal: React.FC<ModernOnboardingModalProps> = ({
       case 1:
         return (
           <div className="space-y-3">
-            <div className="text-center mb-3">
-              <div className="mx-auto mb-2 w-12 h-12 bg-gradient-to-br from-brand-purple to-brand-pink rounded-xl flex items-center justify-center shadow-md">
+            <div className="text-center mb-4">
+              <div className="mx-auto mb-3 w-12 h-12 bg-gradient-to-br from-brand-purple via-purple-500 to-brand-pink rounded-xl flex items-center justify-center shadow-lg">
                 <IconRocket className="w-6 h-6 text-white" />
               </div>
               <h2 className="text-lg font-bold mb-1 text-gray-900 dark:text-white">
-                Welcome to BrightRank.AI
+                Welcome to BrightRank
               </h2>
               <p className="text-gray-600 dark:text-gray-400 text-xs">
                 Set up your AI visibility tracking
@@ -283,7 +300,7 @@ const ModernOnboardingModal: React.FC<ModernOnboardingModalProps> = ({
             </div>
             
             <div className="space-y-3">
-              <div>
+              <div className="group">
                 <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Brand Name
                 </label>
@@ -292,58 +309,71 @@ const ModernOnboardingModal: React.FC<ModernOnboardingModalProps> = ({
                   value={brandName}
                   onChange={e => setBrandName(e.target.value)}
                   placeholder="e.g., BrightRank"
-                  className="w-full px-3 py-2 text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-brand-purple focus:border-transparent outline-none transition-all text-gray-900 dark:text-white placeholder-gray-400"
+                  className="w-full px-3 py-2 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-purple/20 focus:border-brand-purple outline-none transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400"
                 />
               </div>
               
-              <div>
+              <div className="group">
                 <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Website URL
                 </label>
-                <input
-                  type="url"
-                  value={website}
-                  onChange={e => setWebsite(e.target.value)}
-                  placeholder="https://yourbrand.com"
-                  className="w-full px-3 py-2 text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-brand-purple focus:border-transparent outline-none transition-all text-gray-900 dark:text-white placeholder-gray-400"
-                />
+                <div className="relative">
+                  <input
+                    type="url"
+                    value={website}
+                    onChange={e => setWebsite(e.target.value)}
+                    placeholder="https://yourbrand.com"
+                    className="w-full px-3 py-2 pr-8 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-purple/20 focus:border-brand-purple outline-none transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400"
+                  />
+                  <IconGlobe className="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                </div>
               </div>
 
-              <div>
+              <div className="group">
                 <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
                   AI Platforms
                 </label>
-                <select
-                  multiple
-                  value={aiPlatforms}
-                  onChange={(e) => {
-                    const selected = Array.from(e.target.selectedOptions, option => option.value);
-                    setAiPlatforms(selected.length > 0 ? selected : aiPlatforms);
-                  }}
-                  className="w-full px-3 py-2 text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-brand-purple focus:border-transparent outline-none transition-all text-gray-900 dark:text-white"
-                  size={4}
-                >
+                <div className="grid grid-cols-2 gap-1.5">
                   {aiPlatformOptions.map(platform => (
-                    <option key={platform.id} value={platform.id} className="py-1">
-                      {platform.icon} {platform.name}
-                    </option>
+                    <label
+                      key={platform.id}
+                      className={`flex items-center gap-2 p-2 border rounded-lg cursor-pointer transition-all duration-200 ${
+                        aiPlatforms.includes(platform.id)
+                          ? 'border-brand-purple bg-brand-purple/10'
+                          : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
+                      }`}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={aiPlatforms.includes(platform.id)}
+                        onChange={() => toggleArrayItem(platform.id, aiPlatforms, setAiPlatforms)}
+                        className="w-3 h-3 text-brand-purple border-gray-300 rounded focus:ring-brand-purple"
+                      />
+                      <span className="text-sm">{platform.icon}</span>
+                      <span className="text-xs font-medium text-gray-900 dark:text-white flex-1">{platform.name}</span>
+                    </label>
                   ))}
-                </select>
+                </div>
               </div>
 
-              <div>
+              <div className="group">
                 <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Target Country
                 </label>
-                <select
-                  value={targetCountries[0] || 'United States'}
-                  onChange={(e) => setTargetCountries([e.target.value])}
-                  className="w-full px-3 py-2 text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-brand-purple focus:border-transparent outline-none transition-all text-gray-900 dark:text-white"
-                >
-                  {countryOptions.map(country => (
-                    <option key={country} value={country}>{country}</option>
-                  ))}
-                </select>
+                <div className="relative">
+                  <select
+                    value={targetCountries[0] || 'United States'}
+                    onChange={(e) => setTargetCountries([e.target.value])}
+                    className="w-full px-3 py-2 pr-8 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-purple/20 focus:border-brand-purple outline-none transition-all duration-300 text-gray-900 dark:text-white appearance-none cursor-pointer"
+                  >
+                    {countryOptions.map(country => (
+                      <option key={country} value={country}>{country}</option>
+                    ))}
+                  </select>
+                  <svg className="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
               </div>
             </div>
           </div>
@@ -352,8 +382,8 @@ const ModernOnboardingModal: React.FC<ModernOnboardingModalProps> = ({
       case 2:
         return (
           <div className="space-y-3">
-            <div className="text-center mb-3">
-              <div className="mx-auto mb-2 w-12 h-12 bg-gradient-to-br from-green-500 to-blue-600 rounded-xl flex items-center justify-center shadow-md">
+            <div className="text-center mb-4">
+              <div className="mx-auto mb-3 w-12 h-12 bg-gradient-to-br from-green-500 via-emerald-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
                 <IconUsers className="w-6 h-6 text-white" />
               </div>
               <h2 className="text-lg font-bold mb-1 text-gray-900 dark:text-white">
@@ -368,13 +398,13 @@ const ModernOnboardingModal: React.FC<ModernOnboardingModalProps> = ({
             </div>
             
             {isAnalyzing ? (
-              <div className="flex flex-col items-center justify-center py-12">
-                <div className="relative">
-                  <div className="w-12 h-12 border-4 border-brand-purple/30 border-t-brand-purple rounded-full animate-spin"></div>
+              <div className="flex flex-col items-center justify-center py-8">
+                <div className="relative mb-4">
+                  <div className="w-12 h-12 border-4 border-brand-purple/20 border-t-brand-purple rounded-full animate-spin"></div>
                   <IconAnalytics className="absolute inset-0 m-auto w-5 h-5 text-brand-purple" />
                 </div>
-                <p className="mt-4 text-xs text-gray-500 dark:text-gray-400">
-                  Identifying competitors...
+                <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
+                  Finding competitors...
                 </p>
               </div>
             ) : (
@@ -467,12 +497,12 @@ const ModernOnboardingModal: React.FC<ModernOnboardingModalProps> = ({
       case 3:
         return (
           <div className="space-y-3">
-            <div className="text-center mb-3">
-              <div className="mx-auto mb-2 w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center shadow-md">
+            <div className="text-center mb-4">
+              <div className="mx-auto mb-3 w-12 h-12 bg-gradient-to-br from-purple-500 via-violet-500 to-pink-600 rounded-xl flex items-center justify-center shadow-lg">
                 <IconTarget className="w-6 h-6 text-white" />
               </div>
               <h2 className="text-lg font-bold mb-1 text-gray-900 dark:text-white">
-                Tracking Goals
+                Goals & Keywords
               </h2>
               <p className="text-gray-600 dark:text-gray-400 text-xs">
                 Choose what matters most
@@ -556,12 +586,12 @@ const ModernOnboardingModal: React.FC<ModernOnboardingModalProps> = ({
   return (
     <div
       onClick={handleBackdropClick}
-      className={`fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 ${
+      className={`fixed inset-0 bg-gradient-to-br from-black/70 via-purple-900/20 to-pink-900/20 backdrop-blur-md flex items-center justify-center z-50 p-4 ${
         isExiting ? 'opacity-0' : 'opacity-100'
-      } transition-all duration-300`}
+      } transition-all duration-500`}
     >
-      <div className={`w-full max-w-md ${isExiting ? 'animate-slide-down scale-95' : 'animate-slide-up scale-100'} transition-all duration-300`}>
-        <Card className="w-full shadow-2xl border-0 p-4">
+      <div className={`w-full max-w-md ${isExiting ? 'animate-slide-down scale-95' : 'animate-slide-up scale-100'} transition-all duration-500`}>
+        <Card className="w-full shadow-2xl border-0 p-4 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border border-white/20 dark:border-gray-700/50">
           {renderProgressBar()}
           {renderStep()}
           
@@ -570,7 +600,7 @@ const ModernOnboardingModal: React.FC<ModernOnboardingModalProps> = ({
               <Button 
                 onClick={handleBack} 
                 variant="secondary" 
-                className="px-4 py-1.5 text-sm"
+                className="px-4 py-2 text-sm rounded-lg"
                 disabled={isAnalyzing}
               >
                 Back
@@ -581,7 +611,7 @@ const ModernOnboardingModal: React.FC<ModernOnboardingModalProps> = ({
               <Button 
                 onClick={handleNext} 
                 variant="primary" 
-                className="flex-1 px-4 py-1.5 text-sm"
+                className="flex-1 px-4 py-2 text-sm bg-gradient-to-r from-brand-purple to-brand-pink hover:from-purple-600 hover:to-pink-600 rounded-lg transition-all duration-300"
                 disabled={!canProceed() || isAnalyzing}
               >
                 {isAnalyzing ? 'Analyzing...' : 'Continue'}
@@ -590,7 +620,7 @@ const ModernOnboardingModal: React.FC<ModernOnboardingModalProps> = ({
               <Button 
                 onClick={handleFinalSubmit} 
                 variant="primary" 
-                className="flex-1 px-4 py-1.5 text-sm"
+                className="flex-1 px-4 py-2 text-sm bg-gradient-to-r from-brand-purple to-brand-pink hover:from-purple-600 hover:to-pink-600 rounded-lg transition-all duration-300"
                 disabled={!canProceed()}
               >
                 Start Tracking

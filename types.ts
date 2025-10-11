@@ -1,9 +1,11 @@
 export type Page =
   | 'dashboard'
+  | 'multiplatform'
   | 'keywords'
   | 'reports'
   | 'analytics'
   | 'competitors'
+  | 'intelligence'
   | 'alerts'
   | 'settings'
   | 'pricing'
