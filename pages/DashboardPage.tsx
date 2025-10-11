@@ -480,49 +480,83 @@ const MentionsTable: React.FC<{ mentions: DetailedMention[] }> = ({
   };
 
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full text-left text-sm">
-        <thead className="border-b border-white/10 text-gray-400">
-          <tr>
-            <th className="p-3 font-medium">AI Platform</th>
-            <th className="p-3 font-medium">Query / Prompt</th>
-            <th className="p-3 font-medium">Response Snippet</th>
-            <th className="p-3 font-medium">Sentiment</th>
-            <th className="p-3 font-medium">Date</th>
-            <th className="p-3 font-medium text-right">Confidence</th>
-          </tr>
-        </thead>
-        <tbody>
-          {mentions.map((mention, index) => (
-            <tr
-              key={index}
-              className="border-b border-white/10 hover:bg-gray-500/10 transition-colors"
-            >
-              <td className="p-3 whitespace-nowrap">{mention.platform}</td>
-              <td className="p-3 max-w-xs relative group">
-                <p className="truncate">{mention.query}</p>
-                <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 w-max max-w-xs p-2 text-xs text-white bg-gray-800 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10 whitespace-normal break-words">
-                  {mention.query}
-                </span>
-              </td>
-              <td className="p-3 max-w-sm relative group">
-                <p className="truncate">{mention.snippet}</p>
-                <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 w-max max-w-xs p-2 text-xs text-white bg-gray-800 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10 whitespace-normal break-words">
-                  {mention.snippet}
-                </span>
-              </td>
-              <td className="p-3">
+    <>
+      {/* Mobile View - Cards */}
+      <div className="block sm:hidden space-y-3">
+        {mentions.map((mention, index) => (
+          <div
+            key={index}
+            className="p-4 bg-gray-500/10 rounded-lg border border-white/10"
+          >
+            <div className="flex justify-between items-start mb-2">
+              <span className="font-medium text-sm">{mention.platform}</span>
+              <span className="text-xs text-gray-400">{mention.date}</span>
+            </div>
+            <div className="space-y-2 text-sm">
+              <div>
+                <span className="text-gray-400 text-xs">Query:</span>
+                <p className="text-gray-200">{mention.query}</p>
+              </div>
+              <div>
+                <span className="text-gray-400 text-xs">Response:</span>
+                <p className="text-gray-200 line-clamp-2">{mention.snippet}</p>
+              </div>
+              <div className="flex justify-between items-center pt-2">
                 <SentimentIndicator sentiment={mention.sentiment} />
-              </td>
-              <td className="p-3 whitespace-nowrap">{mention.date}</td>
-              <td className="p-3 text-right whitespace-nowrap">
-                {(mention.confidence * 100).toFixed(0)}%
-              </td>
+                <span className="text-xs text-gray-400">
+                  {(mention.confidence * 100).toFixed(0)}% confidence
+                </span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Desktop View - Table */}
+      <div className="hidden sm:block overflow-x-auto">
+        <table className="w-full text-left text-sm">
+          <thead className="border-b border-white/10 text-gray-400">
+            <tr>
+              <th className="p-3 font-medium">AI Platform</th>
+              <th className="p-3 font-medium">Query / Prompt</th>
+              <th className="p-3 font-medium">Response Snippet</th>
+              <th className="p-3 font-medium">Sentiment</th>
+              <th className="p-3 font-medium">Date</th>
+              <th className="p-3 font-medium text-right">Confidence</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+          </thead>
+          <tbody>
+            {mentions.map((mention, index) => (
+              <tr
+                key={index}
+                className="border-b border-white/10 hover:bg-gray-500/10 transition-colors"
+              >
+                <td className="p-3 whitespace-nowrap">{mention.platform}</td>
+                <td className="p-3 max-w-xs relative group">
+                  <p className="truncate">{mention.query}</p>
+                  <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 w-max max-w-xs p-2 text-xs text-white bg-gray-800 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10 whitespace-normal break-words">
+                    {mention.query}
+                  </span>
+                </td>
+                <td className="p-3 max-w-sm relative group">
+                  <p className="truncate">{mention.snippet}</p>
+                  <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 w-max max-w-xs p-2 text-xs text-white bg-gray-800 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10 whitespace-normal break-words">
+                    {mention.snippet}
+                  </span>
+                </td>
+                <td className="p-3">
+                  <SentimentIndicator sentiment={mention.sentiment} />
+                </td>
+                <td className="p-3 whitespace-nowrap">{mention.date}</td>
+                <td className="p-3 text-right whitespace-nowrap">
+                  {(mention.confidence * 100).toFixed(0)}%
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </>
   );
 };
 
@@ -674,22 +708,22 @@ const DashboardPage: React.FC<DashboardPageProps> = ({
       );
 
     return (
-      <div className="space-y-6 animate-fade-in">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div data-tour="visibility-score">
+      <div className="space-y-4 sm:space-y-6 animate-fade-in">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
+          <div data-tour="visibility-score" className="col-span-1">
             <VisibilityScoreCard
               score={analysisResult.overallScore}
               change={analysisResult.visibilityChange}
             />
           </div>
-          <div data-tour="mentions-card">
+          <div data-tour="mentions-card" className="col-span-1">
             <TotalMentionsCard mentions={analysisResult.totalMentions} />
           </div>
-          <div data-tour="sentiment-card">
+          <div data-tour="sentiment-card" className="col-span-1 sm:col-span-2 lg:col-span-1">
             <SentimentChartCard data={analysisResult.sentimentBreakdown} />
           </div>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
           <SentimentTrendChart data={analysisResult.sentimentTrend} />
           <PlatformBreakdownChart data={analysisResult.platformBreakdown} />
         </div>
@@ -697,25 +731,29 @@ const DashboardPage: React.FC<DashboardPageProps> = ({
           insights={insights}
           isLoading={isInsightsLoading}
         />
-        <Card data-tour="mentions-table" className="lg:col-span-3">
-          <h2 className="text-xl font-semibold mb-4">📊 Mentions Tracker</h2>
-          <MentionsTable mentions={analysisResult.mentions} />
+        <Card data-tour="mentions-table" className="overflow-hidden">
+          <div className="p-4 sm:p-6">
+            <h2 className="text-lg sm:text-xl font-semibold mb-4">📊 Mentions Tracker</h2>
+            <div className="overflow-x-auto -mx-4 sm:mx-0">
+              <MentionsTable mentions={analysisResult.mentions} />
+            </div>
+          </div>
         </Card>
       </div>
     );
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6 px-4 sm:px-0">
       <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold">Dashboard</h1>
-          <p className="text-gray-400">
+          <h1 className="text-2xl sm:text-3xl font-bold">Dashboard</h1>
+          <p className="text-sm sm:text-base text-gray-400">
             Full AI Visibility Breakdown for "{appData?.brandName}"
           </p>
         </div>
-        <div className="flex items-center gap-4">
-          <div data-tour="date-selector">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-4">
+          <div data-tour="date-selector" className="w-full sm:w-auto">
             <DateSelector
               selectedRange={dateRange}
               onSelectRange={setDateRange}
@@ -725,10 +763,11 @@ const DashboardPage: React.FC<DashboardPageProps> = ({
             data-tour="refresh-button"
             onClick={handleRefresh}
             disabled={isLoading || isInitialAnalysis}
+            className="w-full sm:w-auto justify-center"
           >
             <IconRefresh />
-            <span className="ml-2 hidden sm:inline">
-              {isLoading ? 'Refreshing...' : 'Refresh Data'}
+            <span className="ml-2">
+              {isLoading ? 'Refreshing...' : 'Refresh'}
             </span>
           </Button>
         </div>

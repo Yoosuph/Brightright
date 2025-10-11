@@ -117,6 +117,27 @@ const ModernSettingsPage: React.FC<SettingsPageProps> = ({
   const [newCompetitorName, setNewCompetitorName] = useState('');
   const [newCompetitorScore, setNewCompetitorScore] = useState('');
   const [activeTab, setActiveTab] = useState<'general' | 'platforms' | 'notifications' | 'privacy'>('general');
+  const [notificationPrefs, setNotificationPrefs] = useState({
+    channels: {
+      inapp: true,
+      email: true,
+      push: false,
+      slack: false,
+    },
+    categories: {
+      mentions: true,
+      competitors: true,
+      alerts: true,
+      reports: true,
+      sentiment: true,
+    },
+    frequency: 'realtime' as 'realtime' | 'hourly' | 'daily' | 'weekly',
+    quietHours: {
+      enabled: false,
+      start: '22:00',
+      end: '08:00',
+    },
+  });
   
   const [platforms, setPlatforms] = useState({
     chatgpt: true,
@@ -126,12 +147,7 @@ const ModernSettingsPage: React.FC<SettingsPageProps> = ({
     bing: false,
   });
 
-  const [notifications, setNotifications] = useState({
-    email: true,
-    push: false,
-    weekly: true,
-    alerts: true,
-  });
+
 
   useEffect(() => {
     setBrandName(appData.brandName);
@@ -376,41 +392,187 @@ const ModernSettingsPage: React.FC<SettingsPageProps> = ({
 
         {/* Notification Settings */}
         {activeTab === 'notifications' && (
-          <Card>
-            <div className="p-6">
-              <h2 className="text-xl font-semibold mb-6">Notification Preferences</h2>
-              <div className="space-y-1">
-                <ToggleSwitch
-                  label="Email Notifications"
-                  description="Receive updates via email"
-                  enabled={notifications.email}
-                  onChange={(enabled) => setNotifications({ ...notifications, email: enabled })}
-                  icon={<IconMail />}
-                />
-                <ToggleSwitch
-                  label="Push Notifications"
-                  description="Get instant browser notifications"
-                  enabled={notifications.push}
-                  onChange={(enabled) => setNotifications({ ...notifications, push: enabled })}
-                  icon={<IconBell />}
-                />
-                <ToggleSwitch
-                  label="Weekly Reports"
-                  description="Receive weekly performance summaries"
-                  enabled={notifications.weekly}
-                  onChange={(enabled) => setNotifications({ ...notifications, weekly: enabled })}
-                  icon={<span className="text-gray-400">📊</span>}
-                />
-                <ToggleSwitch
-                  label="Critical Alerts"
-                  description="Get notified about significant changes"
-                  enabled={notifications.alerts}
-                  onChange={(enabled) => setNotifications({ ...notifications, alerts: enabled })}
-                  icon={<span className="text-gray-400">⚠️</span>}
-                />
+          <div className="space-y-6">
+            {/* Notification Channels */}
+            <Card>
+              <div className="p-6">
+                <h2 className="text-xl font-semibold mb-6">Notification Channels</h2>
+                <div className="space-y-1">
+                  <ToggleSwitch
+                    label="In-App Notifications"
+                    description="Show notifications within the application"
+                    enabled={notificationPrefs.channels.inapp}
+                    onChange={(enabled) => setNotificationPrefs({
+                      ...notificationPrefs,
+                      channels: { ...notificationPrefs.channels, inapp: enabled }
+                    })}
+                    icon={<IconBell />}
+                  />
+                  <ToggleSwitch
+                    label="Email Notifications"
+                    description="Receive notifications via email"
+                    enabled={notificationPrefs.channels.email}
+                    onChange={(enabled) => setNotificationPrefs({
+                      ...notificationPrefs,
+                      channels: { ...notificationPrefs.channels, email: enabled }
+                    })}
+                    icon={<IconMail />}
+                  />
+                  <ToggleSwitch
+                    label="Push Notifications"
+                    description="Get browser push notifications"
+                    enabled={notificationPrefs.channels.push}
+                    onChange={(enabled) => setNotificationPrefs({
+                      ...notificationPrefs,
+                      channels: { ...notificationPrefs.channels, push: enabled }
+                    })}
+                    icon={<span className="text-gray-400">📱</span>}
+                  />
+                  <ToggleSwitch
+                    label="Slack Integration"
+                    description="Send notifications to your Slack workspace"
+                    enabled={notificationPrefs.channels.slack}
+                    onChange={(enabled) => setNotificationPrefs({
+                      ...notificationPrefs,
+                      channels: { ...notificationPrefs.channels, slack: enabled }
+                    })}
+                    icon={<span className="text-gray-400">💬</span>}
+                  />
+                </div>
               </div>
-            </div>
-          </Card>
+            </Card>
+
+            {/* Notification Categories */}
+            <Card>
+              <div className="p-6">
+                <h2 className="text-xl font-semibold mb-6">Notification Categories</h2>
+                <div className="space-y-1">
+                  <ToggleSwitch
+                    label="Brand Mentions"
+                    description="Get notified when your brand is mentioned"
+                    enabled={notificationPrefs.categories.mentions}
+                    onChange={(enabled) => setNotificationPrefs({
+                      ...notificationPrefs,
+                      categories: { ...notificationPrefs.categories, mentions: enabled }
+                    })}
+                    icon={<span className="text-gray-400">💬</span>}
+                  />
+                  <ToggleSwitch
+                    label="Competitor Activity"
+                    description="Track competitor movements and updates"
+                    enabled={notificationPrefs.categories.competitors}
+                    onChange={(enabled) => setNotificationPrefs({
+                      ...notificationPrefs,
+                      categories: { ...notificationPrefs.categories, competitors: enabled }
+                    })}
+                    icon={<span className="text-gray-400">🏆</span>}
+                  />
+                  <ToggleSwitch
+                    label="Critical Alerts"
+                    description="Important changes that need immediate attention"
+                    enabled={notificationPrefs.categories.alerts}
+                    onChange={(enabled) => setNotificationPrefs({
+                      ...notificationPrefs,
+                      categories: { ...notificationPrefs.categories, alerts: enabled }
+                    })}
+                    icon={<span className="text-gray-400">🚨</span>}
+                  />
+                  <ToggleSwitch
+                    label="Reports Ready"
+                    description="When your scheduled reports are generated"
+                    enabled={notificationPrefs.categories.reports}
+                    onChange={(enabled) => setNotificationPrefs({
+                      ...notificationPrefs,
+                      categories: { ...notificationPrefs.categories, reports: enabled }
+                    })}
+                    icon={<span className="text-gray-400">📊</span>}
+                  />
+                  <ToggleSwitch
+                    label="Sentiment Changes"
+                    description="Significant changes in brand sentiment"
+                    enabled={notificationPrefs.categories.sentiment}
+                    onChange={(enabled) => setNotificationPrefs({
+                      ...notificationPrefs,
+                      categories: { ...notificationPrefs.categories, sentiment: enabled }
+                    })}
+                    icon={<span className="text-gray-400">😊</span>}
+                  />
+                </div>
+              </div>
+            </Card>
+
+            {/* Notification Frequency */}
+            <Card>
+              <div className="p-6">
+                <h2 className="text-xl font-semibold mb-6">Delivery Settings</h2>
+                <div className="space-y-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Notification Frequency
+                    </label>
+                    <select
+                      value={notificationPrefs.frequency}
+                      onChange={(e) => setNotificationPrefs({
+                        ...notificationPrefs,
+                        frequency: e.target.value as typeof notificationPrefs.frequency
+                      })}
+                      className="w-full text-sm border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 px-4 py-2"
+                    >
+                      <option value="realtime">Real-time</option>
+                      <option value="hourly">Hourly Digest</option>
+                      <option value="daily">Daily Summary</option>
+                      <option value="weekly">Weekly Report</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <ToggleSwitch
+                      label="Quiet Hours"
+                      description="Pause notifications during specific hours"
+                      enabled={notificationPrefs.quietHours.enabled}
+                      onChange={(enabled) => setNotificationPrefs({
+                        ...notificationPrefs,
+                        quietHours: { ...notificationPrefs.quietHours, enabled }
+                      })}
+                      icon={<span className="text-gray-400">🌙</span>}
+                    />
+                    {notificationPrefs.quietHours.enabled && (
+                      <div className="grid grid-cols-2 gap-4 mt-4 pl-12">
+                        <div>
+                          <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">
+                            Start Time
+                          </label>
+                          <input
+                            type="time"
+                            value={notificationPrefs.quietHours.start}
+                            onChange={(e) => setNotificationPrefs({
+                              ...notificationPrefs,
+                              quietHours: { ...notificationPrefs.quietHours, start: e.target.value }
+                            })}
+                            className="w-full text-sm border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 px-3 py-1"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">
+                            End Time
+                          </label>
+                          <input
+                            type="time"
+                            value={notificationPrefs.quietHours.end}
+                            onChange={(e) => setNotificationPrefs({
+                              ...notificationPrefs,
+                              quietHours: { ...notificationPrefs.quietHours, end: e.target.value }
+                            })}
+                            className="w-full text-sm border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 px-3 py-1"
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </Card>
+          </div>
         )}
 
         {/* Privacy Settings */}

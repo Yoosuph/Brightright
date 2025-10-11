@@ -10,7 +10,7 @@ import LandingPage from './pages/LandingPage';
 import ModernKeywordsPage from './pages/ModernKeywordsPage';
 import CompetitorsPage from './pages/CompetitorsPage';
 import CompetitiveIntelligencePage from './pages/CompetitiveIntelligencePage';
-import AlertsPage from './pages/AlertsPage';
+import NotificationCenterPage from './pages/NotificationCenterPage';
 import ModernOnboardingModal from './components/ModernOnboardingModal';
 import MultiPlatformDashboard from './pages/MultiPlatformDashboard';
 
@@ -571,7 +571,7 @@ const App: React.FC = () => {
       case 'intelligence':
         return <CompetitiveIntelligencePage appData={appData!} />;
       case 'alerts':
-        return <AlertsPage appData={appData!} />;
+        return <NotificationCenterPage />;
       case 'reports':
         return <ModernReportsPage appData={appData!} />;
       case 'settings':

@@ -3,6 +3,7 @@ import type { Page } from '../types';
 import Breadcrumb, { getBreadcrumbItems } from './Breadcrumb';
 import DataRefresh from './DataRefresh';
 import HelpMenu from './HelpMenu';
+import NotificationBell from './NotificationBell';
 
 interface TopBarProps {
   currentPage: Page;
@@ -58,6 +59,10 @@ const getPageTitles = (page: Page): { title: string; subtitle?: string } => {
       title: 'Dashboard',
       subtitle: 'Monitor your brand visibility across AI platforms',
     },
+    multiplatform: {
+      title: 'AI Platforms',
+      subtitle: 'Track your presence across all major AI platforms',
+    },
     analytics: {
       title: 'Advanced Analytics',
       subtitle: 'Deep dive into your brand performance metrics',
@@ -69,6 +74,10 @@ const getPageTitles = (page: Page): { title: string; subtitle?: string } => {
     competitors: {
       title: 'Competitor Analysis',
       subtitle: 'Compare your performance with competitors',
+    },
+    intelligence: {
+      title: 'Competitive Intelligence',
+      subtitle: 'Monitor and analyze your competitive landscape',
     },
     alerts: {
       title: 'Alerts & Notifications',
@@ -167,6 +176,9 @@ const TopBar: React.FC<TopBarProps> = ({
                 <IconRefresh className="h-5 w-5" />
               </button>
             )}
+
+            {/* Notification Bell */}
+            <NotificationBell onNavigate={setCurrentPage} />
 
             {/* Help Menu with Tour Restart */}
             {onRestartTour && (

@@ -1,0 +1,260 @@
+/* Mobile Responsive Styles for Dashboard */
+
+/* Global mobile adjustments */
+@media (max-width: 640px) {
+  /* Reduce padding on mobile */
+  .p-6 {
+    padding: 1rem !important;
+  }
+  
+  .p-8 {
+    padding: 1.5rem !important;
+  }
+
+  /* Stack elements vertically on mobile */
+  .flex-row {
+    flex-direction: column !important;
+  }
+
+  /* Full width buttons on mobile */
+  .btn-group {
+    width: 100%;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  /* Responsive text sizing */
+  .text-3xl {
+    font-size: 1.5rem !important;
+  }
+
+  .text-4xl {
+    font-size: 1.875rem !important;
+  }
+
+  /* Hide desktop-only elements */
+  .desktop-only {
+    display: none !important;
+  }
+
+  /* Show mobile-only elements */
+  .mobile-only {
+    display: block !important;
+  }
+
+  /* Responsive charts */
+  .recharts-wrapper {
+    font-size: 12px !important;
+  }
+
+  /* Responsive tables */
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Card adjustments */
+  .card {
+    margin-bottom: 1rem;
+  }
+
+  /* Modal adjustments */
+  .modal-content {
+    margin: 1rem;
+    max-height: calc(100vh - 2rem);
+    overflow-y: auto;
+  }
+
+  /* Navigation adjustments */
+  .top-bar {
+    padding: 0.75rem 1rem;
+  }
+
+  /* Dropdown adjustments */
+  .dropdown-menu {
+    width: calc(100vw - 2rem);
+    max-width: 320px;
+  }
+}
+
+/* Tablet adjustments */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+/* Small mobile adjustments */
+@media (max-width: 380px) {
+  .text-2xl {
+    font-size: 1.25rem !important;
+  }
+
+  .text-xl {
+    font-size: 1.125rem !important;
+  }
+
+  .p-4 {
+    padding: 0.75rem !important;
+  }
+}
+
+/* Responsive grid utilities */
+@media (max-width: 640px) {
+  .grid-cols-2 {
+    grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+  }
+
+  .grid-cols-3 {
+    grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+  }
+
+  .grid-cols-4 {
+    grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+  }
+}
+
+/* Responsive flex utilities */
+@media (max-width: 640px) {
+  .flex-wrap-mobile {
+    flex-wrap: wrap !important;
+  }
+
+  .w-full-mobile {
+    width: 100% !important;
+  }
+
+  .stack-mobile {
+    flex-direction: column !important;
+  }
+}
+
+/* Notification bell specific */
+@media (max-width: 640px) {
+  .notification-dropdown {
+    position: fixed !important;
+    top: 60px !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    border-radius: 0 !important;
+    max-height: calc(100vh - 60px) !important;
+  }
+}
+
+/* Sidebar adjustments for tablets */
+@media (max-width: 1024px) {
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 40;
+  }
+
+  .sidebar-overlay.open {
+    display: block;
+  }
+}
+
+/* Chart responsive sizing */
+@media (max-width: 640px) {
+  .recharts-surface {
+    width: 100% !important;
+  }
+
+  .recharts-wrapper {
+    width: 100% !important;
+    height: 250px !important;
+  }
+}
+
+/* Competitive Intelligence specific */
+@media (max-width: 640px) {
+  .competitor-card {
+    padding: 1rem !important;
+  }
+
+  .swot-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .positioning-matrix {
+    height: 300px !important;
+  }
+}
+
+/* Keywords page specific */
+@media (max-width: 640px) {
+  .keyword-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .keyword-card {
+    padding: 0.75rem !important;
+  }
+}
+
+/* Settings page specific */
+@media (max-width: 640px) {
+  .settings-tabs {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .settings-tab {
+    min-width: 100px;
+    font-size: 0.875rem;
+  }
+}
+
+/* Reports page specific */
+@media (max-width: 640px) {
+  .report-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .report-tab {
+    white-space: nowrap;
+    min-width: fit-content;
+  }
+}
+
+/* Multi-platform dashboard specific */
+@media (max-width: 640px) {
+  .platform-card {
+    padding: 1rem !important;
+  }
+
+  .platform-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Notification center specific */
+@media (max-width: 640px) {
+  .notification-item {
+    padding: 0.75rem !important;
+  }
+
+  .notification-actions {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
